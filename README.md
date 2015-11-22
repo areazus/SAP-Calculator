@@ -1,4 +1,4 @@
-# SAP_Status
+# SAP-Calculator
 
 This project is for college students receiving financial aid. It helps them determine if they are meeting the satisfactory academic standards (SAP) set by the Federal government and Brooklyn College to receive Federal Financial Aid.
 
