@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<style>
+table, th, td {
+    border: 1px solid black;
+    text-align: left;
+}
+</style>
+
+<script src="sapCalculations.js"></script>
+
+<body>
+  <p id="sapCalc">
+	  Pick your Career:
+	  <input type="radio" name="career" id="ugrd" value="ugrd" checked="checked">Undergraduate
+	  <input type="radio" name="career" id="grd" value="grd">Graduate<br>
+	  Enter Attempted Credits <input type="number" id="acredits" name="acredits" value="1"><br>
+	  Enter Earned Credits <input type="number" id="ecredits" name="ecredits" value="0"><br>
+	  Enter GPA Credits <input type="number" id="gcredits" name="gcredits" value="0"><br>
+	  Enter Current GPA <input type="number" step="any" id="gpa" name="gpa" value="0"><br>
+	  <button onclick="sapResults()" type="button" id="calculate">Calculate Sap</button>
+	  <button onclick="resetSap()" type="button" id="resetSap" disabled="true">Reset</button>
+  </p>
+  <p id="result"></p>
+  <p id="classes"></p>
+  <p id="classesResults"></p>
+  <p id="finalizedPlan"></p>
+</body>
+</html>
