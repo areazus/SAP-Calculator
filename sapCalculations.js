@@ -4,8 +4,12 @@ var earnedCredits;
 var gpaCredits;
 var earnedGPA;
 var undergraduate;
+var plannedSemesters;
+var creditsTakesn;
+var creditsForGpa;
 
 function sapResults() {
+	//Very large function, will be refactored in future versions
     var acredits = document.getElementById("acredits").value;
     var ecredits = document.getElementById("ecredits").value;
     var gpa = document.getElementById("gpa").value;
@@ -213,25 +217,21 @@ function sapResults() {
 }
 
 function resetSapSemesters() {
+	//This function is called when student wants to remake his academic plan from scrach.
+	//We basically empty all the contents of id 'semesters' and open up the fields. 
+	document.getElementById("fsemester").disabled = false;
+	document.getElementById("futurePlan").disabled = false;
+	document.getElementById("reset").disabled = true;
 	document.getElementById("semesters").innerHTML = "";
-	document.getElementById("fsemester").disabled = false;
-	document.getElementById("reset").disabled = true;
-	document.getElementById("futurePlan").disabled = false;
-}
-
-function resetTable(){
-	document.getElementById("futurePlan").disabled = false;
-	document.getElementById("reset").disabled = true;
-	document.getElementById("fsemester").disabled = false;
-	document.getElementById("classes").innerHTML = "";
-	document.getElementById("classesResults").innerHTML = "";
 }
 
 function resetSap(){
+	//This basically reload the whole page, hence resetting the whole calculator
 	location.reload();
 }
 
 function uPaceCreditsNeeded(acredits, ecredits) {
+	//This function returns the number of credits required for the current pace of undergraduate student
     var tacredits = +acredits;
     var tecredits = +ecredits;
     var paceRequired = uCompletionRequired(tacredits);
@@ -240,6 +240,7 @@ function uPaceCreditsNeeded(acredits, ecredits) {
     while (currentPace < paceRequired) {
 		if(paceRequired == 99.99){
 			//A "bad" one
+			//Pace required is 100%
 			return -2;
 		}
         tempCredits = Math.round(((paceRequired * +tacredits) - +tecredits) / (1 - paceRequired));
@@ -253,6 +254,7 @@ function uPaceCreditsNeeded(acredits, ecredits) {
 }
 
 function uCompletionRequired(acredits) {
+	//Returns the number of credits that must be completed for number of attempted credits
     if (+acredits < 25) {
         return 0;
     } else if (+acredits <= 30) {
@@ -291,6 +293,7 @@ function uCompletionRequired(acredits) {
 }
 
 function validate(gpa, acredits, ecredits, gcredits) {
+	//This just validates the initial input to prevent miscalculations
     if (+gpa > 4.0 || +gpa < 0.0) {
         alert("GPA must be between 0.00 and 4.00");
         return false;
@@ -311,6 +314,7 @@ function validate(gpa, acredits, ecredits, gcredits) {
 }
 
 function ugradRequiredGpa(acredits){
+	//This function returns the undergraduate required gpa for the credits attemptedW
 	if(+acredits <= 12){
 		return 1.5;
 	}else if (+acredits <= 24) {
@@ -326,26 +330,26 @@ function Grade(grade, credits) {
 }
 
 function futurePlan(){
+	//For failed students, we ask them to make plan
 	plannedSemesters = document.getElementById("fsemester").value
-	if(+plannedSemesters > 0){
+	if(+plannedSemesters > 0 && +plannedSemesters <4){
+		var result = "";
+		var i;
 		document.getElementById("fsemester").disabled = true;
 		document.getElementById("reset").disabled = false;
 		document.getElementById("futurePlan").disabled = true;
-		var result = "";
-		var i;
 		for(i = 0; i<+plannedSemesters; i++){
 			result += "<div id=\"semester"+i+"\"></div>"
 		}
 		document.getElementById("semesters").innerHTML = result;
-		addSemester(0);
+		addSemester(0); //Add semester 0
 	}else{
-		alert("Planned semesters must be greater than 0");
+		alert("Planned semesters must be between 1 and 3");
 	}
-	semesterCredits = [];
-	semesterGpaCredits = [];
 }
 
 function addSemester(ID){
+	//Adds information about the semester 'ID' to the id semester
 	var result = "<br><br><span style=\"margin-left:5em\">Enter how many classes you plan to take in Semester "+(+ID+1)+": <input type=\"number\" id=\"semesterClasses"+ID+"\" name=\"semesterClasses"+ID+"\" value=\"1\"></span>";
 		result += "<button onclick=\"addSemesterClasses("+ID+")\" type=\"button\" id=\"addSemesterClasses"+ID+"\">Plan</button>"; 
 		result += "<button onclick=\"resetSemester("+ID+")\" type=\"button\" id=\"resetSemester"+ID+"\" disabled=\"true\">Reset</button><br>"; 
@@ -355,6 +359,7 @@ function addSemester(ID){
 }
 
 function addSemesterClasses(ID){
+	//Adds class table about the semester 'ID' to the id semesterTable
 	var gradeSelectOptions= "<option value=\"4.0\">A/A+</option>"
 					+"<option value=\"3.7\">A-</option>"
 					+"<option value=\"3.3\">B+</option>"
@@ -382,20 +387,27 @@ function addSemesterClasses(ID){
 	}
 }
 
-
 function calculateSemester(ID){
-	var acredits = document.getElementById("acredits").value;
-    var ecredits = document.getElementById("ecredits").value;
-	var gpa = document.getElementById("gpa").value;
-	var gcredits = document.getElementById("gcredits").value;
+	//This calculates the results (gpa, pace, attempted credits) for the ID and all the previous semester
+	//Currently it calculates again for ID and all previous semesters even though the previous ones were already calculated
+	//Problem was what happens when student want to reset semesters in middle(ie 2 of 3), we would have to reset a lot of variables
+	//In later version, this will be enhanced.
+	var acredits = attemptedCredits;
+    var ecredits = earnedCredits;
+	var gpa = earnedGPA;
+	var gcredits = gpaCredits;
 	var gpaPoints = +gpa * +gcredits;
-	document.getElementById("calculateSemesterButton"+ID).disabled = true;
-
 	var newCredits = 0;
 	var newGpaPoints = 0;
-	
 	var plannedClasses = document.getElementById("semesterClasses"+ID).value;
 	var i;
+	var tmp;
+	var newGPA;
+	var result;
+	
+	document.getElementById("calculateSemesterButton"+ID).disabled = true;
+	
+	//Ensure that all credits for classes are above 0
 	for(i = 0; i < +plannedClasses; i++){
 		if(+document.getElementById(("semester"+ID+"classes"+i)).value < 1){
 			alert("Credits for each class must be greater than 0");
@@ -403,7 +415,7 @@ function calculateSemester(ID){
 		}
 	}
 	
-	var tmp;
+	//Get credits and select values for current and previous semesters
 	for(i = 0; i <= +ID; i++){
 		plannedClasses = document.getElementById("semesterClasses"+i).value
 		var j;
@@ -416,12 +428,16 @@ function calculateSemester(ID){
 		}
 	}
 	
-	var newGPA = Math.round(((+gpaPoints + newGpaPoints)/(+gcredits+newCredits))*1000)/1000;
+	//calculate new gpa
+	newGPA = Math.round(((+gpaPoints + newGpaPoints)/(+gcredits+newCredits))*1000)/1000;
 	
-	var result = "<br><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong><br>";
-		result += "<strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong><br>";
-		result += "<strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits<br>";
+	//make the result
+	result = "<br><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong><br>";
+	result += "<strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong><br>";
+	result += "<strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits<br>";
 		
+	//if the calculation result for the current semester are last in line, we put finalize button;
+	//otherwise, we add next semester data.
 	if(+ID+1 == +plannedSemesters){
 		result += "<br><button onclick=\"finalizePlan()\" type=\"button\" id=\"finalize\">Finalize this Plan</button><br>"; 
 	}else{
@@ -431,6 +447,8 @@ function calculateSemester(ID){
 }
 
 function resetSemester(ID){
+	//When user wants to reset a semester;
+	//we reset the current semester and any future semesters as well.
 	document.getElementById("semesterClasses"+ID).disabled = false;
 	document.getElementById("addSemesterClasses"+ID).disabled = false;
 	document.getElementById("resetSemester"+ID).disabled = true;
@@ -442,41 +460,13 @@ function resetSemester(ID){
 	}
 }
 
-function calculateFuturePlan(){
-	var acredits = document.getElementById("acredits").value;
-    var ecredits = document.getElementById("ecredits").value;
-	var gpa = document.getElementById("gpa").value;
-	var gcredits = document.getElementById("gcredits").value;
-	var gpaPoints = +gpa * +gcredits;
-	var newCredits = 0;
-	var newGpaPoints = 0;
-	var i;
-	var tmp;
-	for(i=0; i<plannedClasses; i++){
-		tmp = +document.getElementById(("classes"+i)).value;
-		if(tmp<1){
-			alert("Credits for each class must be greater than 0");
-			return;
-		}
-		newCredits += tmp;
-		newGpaPoints += +document.getElementById(("classSelect"+i)).value*tmp;
-	}
-	var newGPA = Math.round(((+gpaPoints + newGpaPoints)/(+gcredits+newCredits))*1000)/1000;
-	var result = "<br><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong><br>";
-	result += "<strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong><br>";
-	result += "<strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits<br>";
-	result += "<br><button onclick=\"finalizePlan()\" type=\"button\" id=\"finalize\">Finalize this Plan</button><br>"
-	document.getElementById("classesResults").innerHTML = result;
-	
-}
-
 function finalizePlan(){
+	//We funalize plan and make it ready to print
 	document.getElementById("calculate").remove();
 	document.getElementById("resetSap").remove();
 	document.getElementById("reset").remove();
 	document.getElementById("futurePlan").remove();
 	document.getElementById("finalize").remove();
-	
 	var i;
 	for(i=0; i<plannedSemesters; i++){
 		document.getElementById(("resetSemester"+i)).remove();
@@ -496,50 +486,67 @@ function finalizePlan(){
 }
 
 function printPlan(){
+	var i;
+	var j;
+	var creditsForEachSemester = [];
+	var creditSelectedForEachSemester = [];
+	var gradeSelectedForEachSemester = [];
+
 	document.getElementById("print").remove();
+	
+	//Make a copy of the document that needs to be printed out
 	var resultPage = "<html><style>table, th, td {border: 1px solid black; text-align: left;}</style><body>";
 	resultPage += "<p>"+document.getElementById("sapCalc").innerHTML+"</p>";
 	resultPage += "<p>"+document.getElementById("result").innerHTML+"</p>";
-	resultPage += "<p>"+document.getElementById("classes").innerHTML+"</p>";
-	resultPage += "<p>"+document.getElementById("classesResults").innerHTML+"</p>";
+	resultPage += "<p>"+document.getElementById("semesters").innerHTML+"</p>";
 	resultPage += "<p>"+document.getElementById("finalizedPlan").innerHTML+"</p>";
 	resultPage +="</body></html>";
 	
-	var creditsSelected = [];
-	var gradesSelected = [];
-	var i;
-	for(i=0; i<plannedClasses; i++){
-		creditsSelected.push(document.getElementById(("classes"+i)).value);
-		gradesSelected.push(document.getElementById(("classSelect"+i)).value);
+	//Copy each of the user input on the current page
+	for(i=0; i<plannedSemesters; i++){
+		creditsForEachSemester.push(document.getElementById(("semesterClasses"+i)).value)
+	}
+	for(i=0; i<creditsForEachSemester.length; i++){
+		var creditsSelected = [];
+		var gradesSelected = [];
+		for(j=0; j<+creditsForEachSemester[i]; j++){
+			creditsSelected.push(document.getElementById(("semester"+i+"classes"+j)).value);
+			gradesSelected.push(document.getElementById(("semester"+i+"classSelect"+j)).value);
+		}
+		creditSelectedForEachSemester.push(creditsSelected);
+		gradeSelectedForEachSemester.push(gradesSelected);
 	}
 	
+	//Make a new document
 	document.open();
     document.write(resultPage);
     document.close();
 	
+	//Paste over the user Entered values into the new document
 	document.getElementById("acredits").value = attemptedCredits;
 	document.getElementById("ecredits").value = earnedCredits;
 	document.getElementById("gcredits").value = gpaCredits;
 	document.getElementById("gpa").value = earnedGPA;
+	document.getElementById("fsemester").value = plannedSemesters;
 	if(undergraduate){
 		document.getElementById("ugrd").checked = true;
 	}else{
 		document.getElementById("ugrd").checked = false;
 		document.getElementById("grd").checked = true;
 	}
-	document.getElementById("fsemester").value = plannedClasses;
-	for(i=0; i<plannedClasses; i++){
-		document.getElementById(("classes"+i)).value = creditsSelected[i];
-		document.getElementById(("classSelect"+i)).value = gradesSelected[i];
+	for(i=0; i<plannedSemesters; i++){
+		document.getElementById("semesterClasses"+i).value = creditsForEachSemester[i];
+		var creditsSelected = creditSelectedForEachSemester[i];
+		var gradesSelected = gradeSelectedForEachSemester[i];
+		for(j=0; j<+creditsForEachSemester[i]; j++){
+			document.getElementById(("semester"+i+"classes"+j)).value = creditsSelected[j];
+			document.getElementById(("semester"+i+"classSelect"+j)).value = gradesSelected[j];
+		}
 	}
 	
-		
+	//Open up the print promt	
 	window.print();
 }
-
-var plannedSemesters;
-var creditsTakesn;
-var creditsForGpa;
 
 var gradeArray = new Array(
 	new Grade("A/A+", 4.0),
