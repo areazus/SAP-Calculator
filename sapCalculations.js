@@ -202,9 +202,9 @@ function sapResults() {
 		//future planning
 		if(sapcount > 0){
 			result += "<strong>Please use the tool below to plan and submit with your SAP appeal</strong><br><br>";
-			result += "<span style=\"margin-left:3em\">Enter how many classes you plan to take: <input type=\"number\" id=\"fclasses\" name=\"fclasses\" value=\"1\"></span>";
+			result += "<span style=\"margin-left:3em\">Enter how many semesters you plan to take: <input type=\"number\" id=\"fsemester\" name=\"fsemester\" value=\"1\"></span>";
 			result += "<button onclick=\"futurePlan()\" type=\"button\" id=\"futurePlan\">Plan</button>"; 
-			result += "<button onclick=\"resetTable()\" type=\"button\" id=\"reset\" disabled=\"true\">Reset</button>"; 
+			result += "<button onclick=\"resetSapSemesters()\" type=\"button\" id=\"reset\" disabled=\"true\">Reset</button>"; 
 		}
 		
         document.getElementById("result").innerHTML = result;
@@ -212,28 +212,23 @@ function sapResults() {
     return false;
 }
 
+function resetSapSemesters() {
+	document.getElementById("semesters").innerHTML = "";
+	document.getElementById("fsemester").disabled = false;
+	document.getElementById("reset").disabled = true;
+	document.getElementById("futurePlan").disabled = false;
+}
 
 function resetTable(){
 	document.getElementById("futurePlan").disabled = false;
 	document.getElementById("reset").disabled = true;
-	document.getElementById("fclasses").disabled = false;
+	document.getElementById("fsemester").disabled = false;
 	document.getElementById("classes").innerHTML = "";
 	document.getElementById("classesResults").innerHTML = "";
 }
 
 function resetSap(){
-	document.getElementById("resetSap").disabled = true;
-	document.getElementById("acredits").disabled = false;
-	document.getElementById("ecredits").disabled = false;
-	document.getElementById("gcredits").disabled = false;
-	document.getElementById("gpa").disabled = false;
-	document.getElementById("ugrd").disabled = false;
-	document.getElementById("grd").disabled = false;
-	document.getElementById("calculate").disabled = false;
-	document.getElementById("result").innerHTML = "";
-	document.getElementById("finalizedPlan").innerHTML = "";
-	document.getElementById("classes").innerHTML = "";
-	document.getElementById("classesResults").innerHTML = "";
+	location.reload();
 }
 
 function uPaceCreditsNeeded(acredits, ecredits) {
@@ -331,6 +326,35 @@ function Grade(grade, credits) {
 }
 
 function futurePlan(){
+	plannedSemesters = document.getElementById("fsemester").value
+	if(+plannedSemesters > 0){
+		document.getElementById("fsemester").disabled = true;
+		document.getElementById("reset").disabled = false;
+		document.getElementById("futurePlan").disabled = true;
+		var result = "";
+		var i;
+		for(i = 0; i<+plannedSemesters; i++){
+			result += "<div id=\"semester"+i+"\"></div>"
+		}
+		document.getElementById("semesters").innerHTML = result;
+		addSemester(0);
+	}else{
+		alert("Planned semesters must be greater than 0");
+	}
+	semesterCredits = [];
+	semesterGpaCredits = [];
+}
+
+function addSemester(ID){
+	var result = "<br><br><span style=\"margin-left:5em\">Enter how many classes you plan to take in Semester "+(+ID+1)+": <input type=\"number\" id=\"semesterClasses"+ID+"\" name=\"semesterClasses"+ID+"\" value=\"1\"></span>";
+		result += "<button onclick=\"addSemesterClasses("+ID+")\" type=\"button\" id=\"addSemesterClasses"+ID+"\">Plan</button>"; 
+		result += "<button onclick=\"resetSemester("+ID+")\" type=\"button\" id=\"resetSemester"+ID+"\" disabled=\"true\">Reset</button><br>"; 
+		result += "<div id=\"semesterTable"+ID+"\"></div><br>"
+		result += "<div id=\"semesterResults"+ID+"\"></div>"
+	document.getElementById("semester"+ID).innerHTML = result;
+}
+
+function addSemesterClasses(ID){
 	var gradeSelectOptions= "<option value=\"4.0\">A/A+</option>"
 					+"<option value=\"3.7\">A-</option>"
 					+"<option value=\"3.3\">B+</option>"
@@ -341,20 +365,80 @@ function futurePlan(){
 					+"<option value=\"1.7\">C-</option>"
 					+"<option value=\"1.3\">D+</option>"
 					+"<option value=\"1.0\">D</option>";
-	plannedClasses = document.getElementById("fclasses").value
+	var plannedClasses = document.getElementById("semesterClasses"+ID).value
 	if(+plannedClasses>0){
-		document.getElementById("futurePlan").disabled = true;
-		document.getElementById("reset").disabled = false;
-		document.getElementById("fclasses").disabled = true;
+		document.getElementById("semesterClasses"+ID).disabled = true;
+		document.getElementById("addSemesterClasses"+ID).disabled = true;
+		document.getElementById("resetSemester"+ID).disabled = false;
 		var table = "<br><center><table style=\"width:50%\"><tr><th>Class Number</th><th>Credits</th><th>Planned Grade</th></tr>";
 		var i;
 		for(i=0; i<+plannedClasses; i++){
-			table +=   "<tr><td>Class "+(i+1)+"</td><td><input type=\"number\" id=\"classes"+i+"\" name=\"classes"+i+"\" value=\"1\"></td><td><select id=\"classSelect"+i+"\">"+gradeSelectOptions+"</select></td></tr>";
+			table +=   "<tr><td>Class "+(i+1)+"</td><td><input type=\"number\" id=\"semester"+ID+"classes"+i+"\" name=\"semester"+ID+"classes"+i+"\" value=\"1\"></td><td><select id=\"semester"+ID+"classSelect"+i+"\">"+gradeSelectOptions+"</select></td></tr>";
 		}
-		table += "</table><button onclick=\"calculateFuturePlan()\" type=\"button\" id=\"fterm\">Calculate</button></center>";
-		document.getElementById("classes").innerHTML = table;
+		table += "</table><button onclick=\"calculateSemester("+ID+")\" type=\"button\" id=\"calculateSemesterButton"+ID+"\">Calculate</button></center>";
+		document.getElementById("semesterTable"+ID).innerHTML = table;
 	}else{
 		alert("Planned classes must be greater than 0");
+	}
+}
+
+
+function calculateSemester(ID){
+	var acredits = document.getElementById("acredits").value;
+    var ecredits = document.getElementById("ecredits").value;
+	var gpa = document.getElementById("gpa").value;
+	var gcredits = document.getElementById("gcredits").value;
+	var gpaPoints = +gpa * +gcredits;
+	document.getElementById("calculateSemesterButton"+ID).disabled = true;
+
+	var newCredits = 0;
+	var newGpaPoints = 0;
+	
+	var plannedClasses = document.getElementById("semesterClasses"+ID).value;
+	var i;
+	for(i = 0; i < +plannedClasses; i++){
+		if(+document.getElementById(("semester"+ID+"classes"+i)).value < 1){
+			alert("Credits for each class must be greater than 0");
+			return;
+		}
+	}
+	
+	var tmp;
+	for(i = 0; i <= +ID; i++){
+		plannedClasses = document.getElementById("semesterClasses"+i).value
+		var j;
+		for(j=0; j<+plannedClasses; j++){
+			document.getElementById(("semester"+i+"classes"+j)).disabled = true;
+			document.getElementById(("semester"+i+"classSelect"+j)).disabled = true;
+			tmp = +document.getElementById(("semester"+i+"classes"+j)).value;
+			newCredits += tmp;
+			newGpaPoints += +document.getElementById(("semester"+i+"classSelect"+j)).value*tmp;
+		}
+	}
+	
+	var newGPA = Math.round(((+gpaPoints + newGpaPoints)/(+gcredits+newCredits))*1000)/1000;
+	
+	var result = "<br><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong><br>";
+		result += "<strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong><br>";
+		result += "<strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits<br>";
+		
+	if(+ID+1 == +plannedSemesters){
+		result += "<br><button onclick=\"finalizePlan()\" type=\"button\" id=\"finalize\">Finalize this Plan</button><br>"; 
+	}else{
+		addSemester(+ID+1);
+	}
+	document.getElementById("semesterResults"+ID).innerHTML = result;
+}
+
+function resetSemester(ID){
+	document.getElementById("semesterClasses"+ID).disabled = false;
+	document.getElementById("addSemesterClasses"+ID).disabled = false;
+	document.getElementById("resetSemester"+ID).disabled = true;
+	document.getElementById("semesterTable"+ID).innerHTML = "";
+	document.getElementById("semesterResults"+ID).innerHTML = "";
+	var i;
+	for(i=+ID+1; i<plannedSemesters; i++){
+		document.getElementById("semester"+i).innerHTML = "";
 	}
 }
 
@@ -389,14 +473,15 @@ function calculateFuturePlan(){
 function finalizePlan(){
 	document.getElementById("calculate").remove();
 	document.getElementById("resetSap").remove();
-	document.getElementById("futurePlan").remove();
 	document.getElementById("reset").remove();
-	document.getElementById("fterm").remove();
+	document.getElementById("futurePlan").remove();
 	document.getElementById("finalize").remove();
+	
 	var i;
-	for(i=0; i<plannedClasses; i++){
-		document.getElementById(("classSelect"+i)).disabled = true;
-		document.getElementById(("classes"+i)).disabled = true;
+	for(i=0; i<plannedSemesters; i++){
+		document.getElementById(("resetSemester"+i)).remove();
+		document.getElementById(("addSemesterClasses"+i)).remove();
+		document.getElementById(("calculateSemesterButton"+i)).remove();
 	}
 	var date = new Date().toLocaleString();
 	var finalResults ="Your Name:____________________________________________<br><br>";
@@ -442,7 +527,7 @@ function printPlan(){
 		document.getElementById("ugrd").checked = false;
 		document.getElementById("grd").checked = true;
 	}
-	document.getElementById("fclasses").value = plannedClasses;
+	document.getElementById("fsemester").value = plannedClasses;
 	for(i=0; i<plannedClasses; i++){
 		document.getElementById(("classes"+i)).value = creditsSelected[i];
 		document.getElementById(("classSelect"+i)).value = gradesSelected[i];
@@ -453,7 +538,6 @@ function printPlan(){
 }
 
 var plannedSemesters;
-var plannedClasses;
 var creditsTakesn;
 var creditsForGpa;
 
