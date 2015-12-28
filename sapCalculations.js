@@ -205,16 +205,164 @@ function sapResults() {
 		
 		//future planning
 		if(sapcount > 0){
-			result += "<strong>Please use the tool below to plan and submit with your SAP appeal</strong><br><br>";
-			result += "<span style=\"margin-left:3em\">Enter how many semesters you plan to take: <input type=\"number\" id=\"fsemester\" name=\"fsemester\" value=\"1\"></span>";
-			result += "<button onclick=\"futurePlan()\" type=\"button\" id=\"futurePlan\">Plan</button>"; 
-			result += "<button onclick=\"resetSapSemesters()\" type=\"button\" id=\"reset\" disabled=\"true\">Reset</button>"; 
+			result += "<button onclick=\"appealPlan()\" type=\"button\" id=\"apealPlan\">Please click here to make an appeal</button>"; 
 		}
 		
         document.getElementById("result").innerHTML = result;
     }
     return false;
 }
+
+function appealPlan(){
+	var result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+result += "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+result += "<head>";
+result += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+result += "<title>Untitled Document</title>";
+result += "<style type=\"text/css\">";
+result += "<!--";
+result += "body {";
+result += "	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;";
+result += "	background: #42413C;";
+result += "	margin: 0;";
+result += "	padding: 0;";
+result += "	color: #000;";
+result += "}";
+
+result += "/* ~~ Element/tag selectors ~~ */";
+result += "ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */";
+result += "	padding: 0;";
+result += "	margin: 0;";
+result += "}";
+result += "h1, h2, h3, h4, h5, h6, p {";
+result += "	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */";
+result += "	padding-right: 15px;";
+result += "	padding-left: 15px; /* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */";
+result += "}";
+result += "a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */";
+result += "	border: none;";
+result += "}";
+result += "/* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */";
+result += "a:link {";
+result += "	color: #42413C;";
+result += "	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */";
+result += "}";
+result += "a:visited {";
+result += "	color: #6E6C64;";
+result += "	text-decoration: underline;";
+result += "}";
+result += "a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */";
+result += "	text-decoration: none;";
+result += "}";
+
+result += "/* ~~ this fixed width container surrounds all other elements ~~ */";
+result += ".container {";
+result += "	width: 960px;";
+result += "	background: #FFF;";
+result += "	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */";
+result += "}";
+
+result += "/* ~~ This is the layout information. ~~ ";
+
+result += "1) Padding is only placed on the top and/or bottom of the div. The elements within this div have padding on their sides. This saves you from any \"box model math\". Keep in mind, if you add any side padding or border to the div itself, it will be added to the width you define to create the *total* width. You may also choose to remove the padding on the element in the div and place a second div within it with no width and the padding necessary for your design.";
+
+result += "*/";
+result += ".content {";
+result += "	padding: 10px 0;";
+result += "	font-family: Verdana, Arial, Helvetica, sans-serif;";
+result += "}";
+
+result += "/* ~~ miscellaneous float/clear classes ~~ */";
+result += ".fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */";
+result += "	float: right;";
+result += "	margin-left: 8px;";
+result += "}";
+result += ".fltlft { /* this class can be used to float an element left in your page. The floated element must precede the element it should be next to on the page. */";
+result += "	float: left;";
+result += "	margin-right: 8px;";
+result += "}";
+result += ".clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the overflow:hidden on the .container is removed */";
+result += "	clear:both;";
+result += "	height:0;";
+result += "	font-size: 1px;";
+result += "	line-height: 0px;";
+result += "}";
+result += "-->";
+result += "</style></head>";
+
+result += "<body>";
+
+result += "<div class=\"container\">";
+result += "  <div class=\"content\">";
+result += "    <p><img src=\"BrooklynCollege.jpg\" width=\"177\" height=\"69\" hspace=\"15\" /><br />";
+result += "    <center><h3>TITLE IV SATISFACTORY ACADEMIC PROGRESS APPEAL</h3></center></p>";
+result += "    <center><h4>STEPS TO FILE A TITLE IV APPEAL</h4></center>";
+result += "	<blockquote>";
+result += "	  1. This is a test<br />";
+result += "      	 2. Step 2<br />";
+result += "      	 3. Step 3<br />";
+result += "         4. Step 4<br />";
+result += "         5. Step 4";
+result += "    </blockquote>";
+result += "    <center><h4>DEADLINE</h4></center>";
+result += "<p>Your  appeal must be received by <strong>DATE HERE</strong> for the <strong>TERM</strong> semester.</p>";
+result += "<h4>Student Information:</h4>";
+result += "<p>Last Name: <input name=\"LastName\" type=\"text\" id=\"LastName\" size=\"26\" maxlength=\"30\" />";
+result += "  	&nbsp;&nbsp;First Name: <input name=\"FirstName\" type=\"text\" id=\"FirstName\" size=\"26\" maxlength=\"30\" />";
+result += "  	&nbsp;&nbsp;EMPLID: <input name=\"EMPLID\" type=\"text\" id=\"EMPLID\" size=\"10\" maxlength=\"9\" /><br /><br />";
+result += "  Street Address: ";
+result += "  <input name=\"Address\" type=\"text\" id=\"Address\" value=\"\" size=\"97\" maxlength=\"120\" /><br /><br />";
+result += "  City: ";
+result += "  <input name=\"City\" type=\"text\" id=\"City\" value=\"\" size=\"30\" maxlength=\"50\" />";
+result += "    &nbsp;&nbsp;State: ";
+result += "  <input name=\"State\" type=\"text\" id=\"State\" value=\"\" size=\"30\" maxlength=\"30\" />";
+result += "    &nbsp;&nbsp;ZIP Code: ";
+result += "  <input name=\"Zip\" type=\"text\" id=\"Zip\" value=\"\" size=\"15\" maxlength=\"5\" /><br /><br />";
+result += "  Email Address:  ";
+result += "  <input name=\"Email\" type=\"email\" id=\"Email\" value=\"\" size=\"52\" maxlength=\"52\" />";
+result += "  &nbsp;&nbsp;Phone Number:  ";
+result += "  <input name=\"Phone\" type=\"number\" id=\"Phone\" value=\"\" size=\"12\" maxlength=\"12\" /><br /><br />";
+result += "</p>";
+result += "<h4>Step One (Reasoning):</h4>";
+result += "<p><input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" />Reason1 <br />";
+result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason2\" />Reason2<br />";
+result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason3<br />";
+result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason4<br />";
+result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason5<br /></p>";
+result += "<h4>Step Two (Personal Satatement):</h4>";
+result += "<p>";
+result += "Provide a detailed explanation of the circumstances in Step One that led to the Satisfactory Academic Progress violation. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />";
+result += "<textarea name=\"personalStatement\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"State\"></textarea><br /><br />";
+result += "</p>";
+result += "<h4>Step Three (Progress):</h4>";
+result += "<p>Please describe the steps you have taken to correct the problems that have prevented you from making Satisfactory Academic Progress. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />";
+result += "<textarea name=\"Steps\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"State\"></textarea>";
+result += "</p>";
+result += "<h4>Step Four:</h4>";
+result += "<div id=\"result\">";
+result += "	<span style=\"margin-left:3em\">Enter how many semesters you plan to take: <input type=\"number\" id=\"fsemester\" name=\"fsemester\" value=\"1\"></span>";
+result += "    <button onclick=\"futurePlan()\" type=\"button\" id=\"futurePlan\">Plan</button>";
+result += "    <button onclick=\"resetSapSemesters()\" type=\"button\" id=\"reset\" disabled=\"\">Reset</button>";
+result += "  </div>";
+result += "  <div id=\"semesters\"></div>";
+result += "  <div id=\"finalizedPlan\"></div>";
+result += "  <h4>Step Five:</h4>";
+result += "  <h4>Step Six:</h4>";
+result += "  <h4>Step Seven:</h4>";
+result += "  ";
+result += "  <!-- end .content -->";
+result += "</div>";
+result += "  <!-- end .container --></div>";
+result += "</body>";
+result += "</html>";
+
+	
+	
+	document.open();
+    document.write(result);
+    document.close();
+}
+
 
 function resetSapSemesters() {
 	//This function is called when student wants to remake his academic plan from scrach.
@@ -432,9 +580,9 @@ function calculateSemester(ID){
 	newGPA = Math.round(((+gpaPoints + newGpaPoints)/(+gcredits+newCredits))*1000)/1000;
 	
 	//make the result
-	result = "<br><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong><br>";
-	result += "<strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong><br>";
-	result += "<strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits<br>";
+	result = "<br><span style=\"margin-left:3em\"><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong></span><br>";
+	result += "<span style=\"margin-left:3em\"><strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong></span><br>";
+	result += "<span style=\"margin-left:3em\"><strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits</span><br>";
 		
 	//if the calculation result for the current semester are last in line, we put finalize button;
 	//otherwise, we add next semester data.
@@ -462,8 +610,6 @@ function resetSemester(ID){
 
 function finalizePlan(){
 	//We funalize plan and make it ready to print
-	document.getElementById("calculate").remove();
-	document.getElementById("resetSap").remove();
 	document.getElementById("reset").remove();
 	document.getElementById("futurePlan").remove();
 	document.getElementById("finalize").remove();
@@ -473,16 +619,6 @@ function finalizePlan(){
 		document.getElementById(("addSemesterClasses"+i)).remove();
 		document.getElementById(("calculateSemesterButton"+i)).remove();
 	}
-	var date = new Date().toLocaleString();
-	var finalResults ="Your Name:____________________________________________<br><br>";
-	finalResults += "Your Signatures:____________________________________________<br><br>";
-	finalResults += "Todays Date:"+date+"<br><br><br>";
-	finalResults += "Academic Advisor Name:____________________________________________<br><br>";
-	finalResults += "Academic Advisor Signatures:____________________________________________<br><br>"
-	finalResults += "Advisement Date:____________________________________________<br><br>"
-	finalResults += "<center><button onclick=\"printPlan()\" type=\"button\" id=\"print\">Print this Plan</button></center><br>"
-	document.getElementById("finalizedPlan").innerHTML = finalResults;
-
 }
 
 function printPlan(){
