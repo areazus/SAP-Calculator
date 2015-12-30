@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script src="sapCalculations.js"></script>
+<body onload="setVariables(1, 0, 0, 0, 1)">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Brooklyn College SAP Appeal</title>
+<style type="text/css">
+<!--
+textarea
+{
+  width:90%;
+  resize: none;
+}
+
+textarea#styled {
+	height:11em;
+	line-height: 31px;
+  	background-image: -webkit-linear-gradient(left, white 0, transparent 0), -webkit-linear-gradient(right, white 0, transparent 0), -webkit-linear-gradient(white 30px, #ccc 30px, #ccc 31px, white 31px);
+  	background-repeat: repeat-y;
+ 	 background-size: 100% 100%, 100% 100%, 100% 31px;
+  	background-attachment: local;
+}
+
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background: #42413C;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+/* ~~ Element/tag selectors ~~ */
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
+	padding-right: 15px;
+	padding-left: 15px; /* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */
+}
+a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
+	border: none;
+}
+/* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
+a:link {
+	color: #42413C;
+	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
+}
+a:visited {
+	color: #6E6C64;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+	text-decoration: none;
+}
+
+/* ~~ this fixed width container surrounds all other elements ~~ */
+.container {
+	width: 960px;
+	background: #FFF;
+	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */
+}
+
+/* ~~ This is the layout information. ~~ 
+
+1) Padding is only placed on the top and/or bottom of the div. The elements within this div have padding on their sides. This saves you from any "box model math". Keep in mind, if you add any side padding or border to the div itself, it will be added to the width you define to create the *total* width. You may also choose to remove the padding on the element in the div and place a second div within it with no width and the padding necessary for your design.
+
+*/
+.content {
+	padding: 10px 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page. The floated element must precede the element it should be next to on the page. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the overflow:hidden on the .container is removed */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+#headlineGrey {
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-color: #999;
+}
+#headlineLightGrey {
+	background-color: #CCC;
+}
+-->
+@media print {
+
+body {-webkit-print-color-adjust: exact;}
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+  <div class="content">
+    <p><img src="BrooklynCollege.jpg" width="177" height="69" hspace="15" /><br />
+    <center><h3>TITLE IV SATISFACTORY ACADEMIC PROGRESS APPEAL</h3></center></p>
+    <div id="headlineGrey"><center><h4>STEPS TO FILE A TITLE IV APPEAL</h4></center></div>
+	<blockquote>
+	  1. This is a test<br />
+      	 2. Step 2<br />
+      	 3. Step 3<br />
+         4. Step 4<br />
+         5. Stepuietilueil 4
+    </blockquote>
+    <div id="headlineGrey"><center><h4>DEADLINE</h4></center></div>
+<p>Your  appeal must be received by <strong>DATE HERE</strong> for the <strong>TERM</strong> semester.</p>
+<div id="headlineLightGrey"><h4><span style="">Student Information:</span></h4></div>
+<p>Last Name: <input name="LastName" type="text" id="LastName" size="26" maxlength="30" />
+  	&nbsp;&nbsp;First Name: <input name="FirstName" type="text" id="FirstName" size="26" maxlength="30" />
+  	&nbsp;&nbsp;EMPLID: <input name="EMPLID" type="text" id="EMPLID" size="10" maxlength="9" /><br /><br />
+  Street Address: 
+  <input name="Address" type="text" id="Address" value="" size="97" maxlength="120" /><br /><br />
+  City: 
+  <input name="City" type="text" id="City" value="" size="30" maxlength="50" />
+    &nbsp;&nbsp;State: 
+  <input name="State" type="text" id="State" value="" size="30" maxlength="30" />
+    &nbsp;&nbsp;ZIP Code: 
+  <input name="Zip" type="text" id="Zip" value="" size="15" maxlength="5" /><br /><br />
+  Email Address:  
+  <input name="Email" type="email" id="Email" value="" size="52" maxlength="52" />
+  &nbsp;&nbsp;Phone Number:  
+  <input name="Phone" type="number" id="Phone" value="" size="12" maxlength="12" /><br /><br />
+</p>
+<div id="headlineLightGrey"><h4>Step One (Reasoning):</h4></div>
+
+<p>Please indicate the extenuating circumstances that contributed to your inability to maintain Satisfactory Academic Progress by checking the category below that applies to you. Please follow the instructions for each category.<br /><br />
+
+<input type="checkbox" name="reason4Appeal" value="reason1" /><strong>Death of an immediate family member (spouse, child, sibling, or parent)</strong><br />Attach a copy of the death certificate or obituary and include the name of the deceased and relationship in the personal statement.<br />
+ <br />
+ <input type="checkbox" name="reason4Appeal" value="reason1" /><strong>Serious injury or illness to student or immediate family member (spouse, child, sibling, or parent)</strong><br />Attach a statement from the physician and explain the nature and dates of the injury or illness in the personal statement.<br />
+ <br />
+ <input type="checkbox" name="reason4Appeal" value="reason1" /><strong>Significant trauma, crisis or undue hardship
+</strong><br />Attach supporting documentation from a third party (physician, social worker, psychiatrist, law enforcement official, etc.)<br />
+ <br />
+ <input type="checkbox" name="reason4Appeal" value="reason1" /><strong>Change of curriculum/ Exceeds maximum credits
+</strong><br />Provide a detailed explanation as to why an excessive amount of attempted credits has been taken without progress to graduation. Supporting documentation must also be provided.<br />
+ <br />
+ <input type="checkbox" name="reason4Appeal" value="reason1" /><strong>Other unexpected circumstances</strong><br />Provide a detailed explanation in the personal statement explaining the nature and dates of the unexpected circumstances. Supporting documentation must also be provided.<br />
+ <br />
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </p>
+<div id="headlineLightGrey"><h4>Step Two (Personal Satatement):</h4></div>
+<p>
+Provide a detailed explanation of the circumstances in Step One that led to the Satisfactory Academic Progress violation. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />
+<center><textarea name="personalStatement" maxlength="1100" cols="120" rows="11" id="personalStatement"></textarea></center><br /><br />
+</p>
+<div id="headlineLightGrey"><h4>Step Three (Progress):</h4></div>
+<p>Please describe the steps you have taken to correct the problems that have prevented you from making Satisfactory Academic Progress. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />
+<center><textarea name="Steps" maxlength="1100" cols="120" rows="11" id="progressBox"></textarea></center>
+</p>
+<div id="headlineLightGrey"><h4>Step Four (Plan):</h4></div>
+<div id="result">
+	<span style="margin-left:3em">Enter how many semesters you plan to take: <input type="number" id="fsemester" name="fsemester" value="1"></span>
+    <button onclick="futurePlan()" type="button" id="futurePlan">Plan</button>
+    <button onclick="resetSapSemesters()" type="button" id="reset"disabled="">Reset</button>
+  </div>
+  <div id="semesters"></div>
+  <div id="finalizedPlan"></div>
+  <br />
+  <div id="headlineLightGrey"><h4>Step Five (Certification and Signature):</h4></div>
+  <p>I am requesting to have my eligibility for financial aid to be reinstated. I understand that my appeal will not be reviewed if it is incomplete or lacks documentation. By signing this form, I certify that the information provided on this form is both truthful and accurate.<br /><br />
+   <center>
+   Student's Signatures: ___________________________________&nbsp;&nbsp;&nbsp;&nbsp;Date:_________________
+   </center><br />
+  </p>
+  <div id="headlineLightGrey"><h4>Step Six (Academic Adviser Certification):</h4></div>
+  <p>I approve this financial aid academic plan, which, if followed, will assist the student in reaching program completion or an academic standing acceptable for Satisfactory Academic Progress.<br /><br /> Comments:<br />
+    
+    <center><textarea name="personalStatement2" id="styled" maxlength="1100" cols="120" rows="11" id="personalStatement" disabled="disabled"></textarea></center>
+    <br /><br /><center>
+      Advisor's Name: _________________&nbsp;&nbsp;&nbsp;Advisor's Signatures: _________________&nbsp;&nbsp;&nbsp;Date:______________
+   </center><br /></p>
+  <div id="headlineLightGrey"><h4>Committee Decision:</h4></div>
+
+    <p>
+    <center>Appeal Approved<img src="checkbox.jpg" width="27" height="23" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal Denied
+    <img src="checkbox.jpg" width="27" height="21" /><br /></center></p><p>
+  Comments:<br />
+    
+    <center><textarea name="personalStatement2" id="styled"maxlength="1100" cols="120" rows="11" id="personalStatement" disabled="disabled"></textarea></center>
+    <br /><br /><center>
+      Chairperson's Signature: _________________&nbsp;&nbsp;&nbsp;Print Name: _________________&nbsp;&nbsp;&nbsp;Date:______________
+    </center><br /><center>
+      Student Notified on: _________________&nbsp;&nbsp;&nbsp;via&nbsp;&nbsp;&nbsp; email: _____&nbsp;&nbsp;&nbsp;phone: _____&nbsp;&nbsp;&nbsp;mail: _____
+    </center>
+  </p>
+  <div id="headlineLightGrey"><h4>Academic Plan Complience Review:</h4></div>
+  <p>
+    <img src="checkbox.jpg" width="27" height="23" /> Student met the conditions of the financial aid academic plan<br />
+    <img src="checkbox.jpg" width="27" height="21" /> Student didn't the conditions of the financial aid academic plan<br /><br />
+  Comments:<br />
+    
+   <center> <textarea name="personalStatement2" id="styled" maxlength="1100" cols="120" rows="11" id="personalStatement" disabled="disabled"></textarea></center>
+    <center><br />
+     Reviewer's Signature: _________________&nbsp;&nbsp;&nbsp;Print Name: _________________&nbsp;&nbsp;&nbsp;Date:______________
+    </center>
+  </p>
+  <!-- end .content -->
+</div>
+  <!-- end .container --></div>
+</body>
+</html>

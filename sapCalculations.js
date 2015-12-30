@@ -8,6 +8,20 @@ var plannedSemesters;
 var creditsTakesn;
 var creditsForGpa;
 
+function setVariables(acredits, ecredits, gcredits, egpa, unOrGr){
+	attemptedCredits = +acredits;
+	earnedCredits = +ecredits;
+	gpaCredits = +gcredits;
+	earnedGPA = +egpa;
+	undergraduate = (+unOrGr == 0 ? true : false);
+	/*
+	plannedSemesters = +psemester;
+	creditsTakesn = +cTakesn;
+	creditsForGpa = +cForGpa;
+	*/
+}
+
+
 function sapResults() {
 	//Very large function, will be refactored in future versions
     var acredits = document.getElementById("acredits").value;
@@ -213,14 +227,72 @@ function sapResults() {
     return false;
 }
 
+function paceStatus(attempted, earned) {
+	var currentPace = Math.round(((+earned / +attempted) * 100) * 100) / 100;
+	var paceRequired;
+	if(undergraduate){
+		paceRequired = uCompletionRequired(attempted);
+		if(paceRequired != -2 && currentPace >= paceRequired){
+			return true;
+		}
+	}else{
+		if (currentPace > 67){
+			return true;
+		}
+	}
+	return false;
+}
+
+function gpaStatus(gpa, acredits) {
+	if(undergraduate){
+		if(ugradRequiredGpa(acredits) <= +gpa){
+			return true;
+		}
+	}else{
+		if(+gpa >= 3.0){
+			return true;
+		}
+	}
+	return false;
+}
+
+function maxTimeFrameStatus(attempted) {
+	if(undergraduate){
+		if(attempted < 180){
+			return true;
+		}
+	}else{
+		if(attempted < 45){
+			return true;
+		}
+	}
+}
+
 function appealPlan(){
-	var result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+var result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 result += "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+result += "<script src=\"sapCalculations.js\"></script>";
+result += "<body onload=\"setVariables("+attemptedCredits+", "+earnedCredits+", "+gpaCredits+", "+earnedGPA+", "+(undergraduate?"0":"1")+")\">";
 result += "<head>";
 result += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
-result += "<title>Untitled Document</title>";
+result += "<title>Brooklyn College SAP Appeal</title>";
 result += "<style type=\"text/css\">";
 result += "<!--";
+result += "textarea";
+result += "{";
+result += "  width:90%;";
+result += "  resize: none;";
+result += "}";
+
+result += "textarea#styled {";
+result += "	height:11em;";
+result += "	line-height: 31px;";
+result += "  	background-image: -webkit-linear-gradient(left, white 0, transparent 0), -webkit-linear-gradient(right, white 0, transparent 0), -webkit-linear-gradient(white 30px, #ccc 30px, #ccc 31px, white 31px);";
+result += "  	background-repeat: repeat-y;";
+result += " 	 background-size: 100% 100%, 100% 100%, 100% 31px;";
+result += "  	background-attachment: local;";
+result += "}";
+
 result += "body {";
 result += "	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;";
 result += "	background: #42413C;";
@@ -287,8 +359,22 @@ result += "	height:0;";
 result += "	font-size: 1px;";
 result += "	line-height: 0px;";
 result += "}";
+result += "#headlineGrey {";
+result += "	background-attachment: fixed;";
+result += "	background-repeat: no-repeat;";
+result += "	background-color: #999;";
+result += "}";
+result += "#headlineLightGrey {";
+result += "	background-color: #CCC;";
+result += "}";
 result += "-->";
-result += "</style></head>";
+result += "@media print {";
+
+result += "body {-webkit-print-color-adjust: exact;}";
+result += "}";
+result += "</style>";
+
+result += "</head>";
 
 result += "<body>";
 
@@ -296,71 +382,131 @@ result += "<div class=\"container\">";
 result += "  <div class=\"content\">";
 result += "    <p><img src=\"BrooklynCollege.jpg\" width=\"177\" height=\"69\" hspace=\"15\" /><br />";
 result += "    <center><h3>TITLE IV SATISFACTORY ACADEMIC PROGRESS APPEAL</h3></center></p>";
-result += "    <center><h4>STEPS TO FILE A TITLE IV APPEAL</h4></center>";
+result += "    <div id=\"headlineGrey\"><center><h4>STEPS TO FILE A TITLE IV APPEAL</h4></center></div>";
 result += "	<blockquote>";
-result += "	  1. This is a test<br />";
-result += "      	 2. Step 2<br />";
-result += "      	 3. Step 3<br />";
-result += "         4. Step 4<br />";
-result += "         5. Step 4";
-result += "    </blockquote>";
-result += "    <center><h4>DEADLINE</h4></center>";
+result += "	  1. Complete Steps 1-3 of this appeal and include appropriate supporting documentation.<br />";
+result += "      	 2. Complete Step 4 by constructing your academic plan. When constructing your academic plan be sure to be conscious that the end result of your academic plan will leave you in good academic standing for SAP purposes. Clicks finalize your plan to print out your appeal and academic plan. PLEASE NOTE: the completion and submission of this academic plan is not final and can be altered by an advisor if necessary.<br />";
+result += "      	 3. Sign and date the document in step 5 which certifies that you will submit your appeal and academic plan by the due date indicated on the form.<br />";
+result += "         4. Submit appeal and supporting documents to the enrollment services center located on the first floor of the West Quad Building.<br />";
+result += "         5.  If your SAP appeal and academic plan is approved you will be notified via email by the SAP committee. <br />";
+result += "         6. ";
+result += "	If your academic plan is approved you will receive instructions on how to complete Step 6 by email. </blockquote>";
+result += "    <div id=\"headlineGrey\"><center><h4>DEADLINE</h4></center></div>";
 result += "<p>Your  appeal must be received by <strong>DATE HERE</strong> for the <strong>TERM</strong> semester.</p>";
-result += "<h4>Student Information:</h4>";
+result += "<div id=\"headlineLightGrey\"><h4><span style=\"\">Student Information:</span></h4></div>";
 result += "<p>Last Name: <input name=\"LastName\" type=\"text\" id=\"LastName\" size=\"26\" maxlength=\"30\" />";
 result += "  	&nbsp;&nbsp;First Name: <input name=\"FirstName\" type=\"text\" id=\"FirstName\" size=\"26\" maxlength=\"30\" />";
-result += "  	&nbsp;&nbsp;EMPLID: <input name=\"EMPLID\" type=\"text\" id=\"EMPLID\" size=\"10\" maxlength=\"9\" /><br /><br />";
+result += "  	&nbsp;&nbsp;EMPLID: <input name=\"EMPLID\" type=\"text\" id=\"EMPLID\" size=\"10\" maxlength=\"9\" />";
+result += "</p>";
+result += "<p>Academic Career: &nbsp;&nbsp;&nbsp;&nbsp;Undergraduate:";
+result += "  <input type=\"radio\" name=\"carAppeal\" value=\"reason1\" />";
+result += "  &nbsp;&nbsp;Seek:<input type=\"radio\" name=\"carAppeal\" value=\"reason2\" />&nbsp;&nbsp;Graduate:<input type=\"radio\" name=\"carAppeal\" value=\"reason3\" /> <br />";
+result += "  <br />";
 result += "  Street Address: ";
 result += "  <input name=\"Address\" type=\"text\" id=\"Address\" value=\"\" size=\"97\" maxlength=\"120\" /><br /><br />";
 result += "  City: ";
 result += "  <input name=\"City\" type=\"text\" id=\"City\" value=\"\" size=\"30\" maxlength=\"50\" />";
-result += "    &nbsp;&nbsp;State: ";
+result += "  &nbsp;&nbsp;State: ";
 result += "  <input name=\"State\" type=\"text\" id=\"State\" value=\"\" size=\"30\" maxlength=\"30\" />";
-result += "    &nbsp;&nbsp;ZIP Code: ";
+result += "  &nbsp;&nbsp;ZIP Code: ";
 result += "  <input name=\"Zip\" type=\"text\" id=\"Zip\" value=\"\" size=\"15\" maxlength=\"5\" /><br /><br />";
 result += "  Email Address:  ";
 result += "  <input name=\"Email\" type=\"email\" id=\"Email\" value=\"\" size=\"52\" maxlength=\"52\" />";
 result += "  &nbsp;&nbsp;Phone Number:  ";
 result += "  <input name=\"Phone\" type=\"number\" id=\"Phone\" value=\"\" size=\"12\" maxlength=\"12\" /><br /><br />";
 result += "</p>";
-result += "<h4>Step One (Reasoning):</h4>";
-result += "<p><input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" />Reason1 <br />";
-result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason2\" />Reason2<br />";
-result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason3<br />";
-result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason4<br />";
-result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason3\" />Reason5<br /></p>";
-result += "<h4>Step Two (Personal Satatement):</h4>";
+result += "<div id=\"headlineLightGrey\"><h4>Step One (Reasoning):</h4></div>";
+
+result += "<p>Please indicate the extenuating circumstances that contributed to your inability to maintain Satisfactory Academic Progress by checking the category below that applies to you. Please follow the instructions for each category.<br /><br />";
+
+result += "<input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" /><strong>Death of an immediate family member (spouse, child, sibling, or parent)</strong><br />Attach a copy of the death certificate or obituary and include the name of the deceased and relationship in the personal statement.<br />";
+result += " <br />";
+result += " <input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" /><strong>Serious injury or illness to student or immediate family member (spouse, child, sibling, or parent)</strong><br />Attach a statement from the physician and explain the nature and dates of the injury or illness in the personal statement.<br />";
+result += " <br />";
+result += " <input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" /><strong>Significant trauma, crisis or undue hardship";
+result += "</strong><br />Attach supporting documentation from a third party (physician, social worker, psychiatrist, law enforcement official, etc.)<br />";
+result += " <br />";
+result += " <input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" /><strong>Change of curriculum/ Exceeds maximum credits";
+result += "</strong><br />Provide a detailed explanation as to why an excessive amount of attempted credits has been taken without progress to graduation. Supporting documentation must also be provided.<br />";
+result += " <br />";
+result += " <input type=\"checkbox\" name=\"reason4Appeal\" value=\"reason1\" /><strong>Other unexpected circumstances</strong><br />Provide a detailed explanation in the personal statement explaining the nature and dates of the unexpected circumstances. Supporting documentation must also be provided.<br />";
+result += " <br />";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " ";
+result += " </p>";
+result += "<div id=\"headlineLightGrey\"><h4>Step Two (Personal Satatement):</h4></div>";
 result += "<p>";
 result += "Provide a detailed explanation of the circumstances in Step One that led to the Satisfactory Academic Progress violation. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />";
-result += "<textarea name=\"personalStatement\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"State\"></textarea><br /><br />";
+result += "<center><textarea name=\"personalStatement\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"personalStatement\"></textarea></center><br /><br />";
 result += "</p>";
-result += "<h4>Step Three (Progress):</h4>";
+result += "<div id=\"headlineLightGrey\"><h4>Step Three (Progress):</h4></div>";
 result += "<p>Please describe the steps you have taken to correct the problems that have prevented you from making Satisfactory Academic Progress. Please provide a statement below. If additional space is needed, please attach a typed statement.<br />";
-result += "<textarea name=\"Steps\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"State\"></textarea>";
+result += "<center><textarea name=\"Steps\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"progressBox\"></textarea></center>";
 result += "</p>";
-result += "<h4>Step Four:</h4>";
+result += "<div id=\"headlineLightGrey\"><h4>Step Four (Plan):</h4></div>";
 result += "<div id=\"result\">";
 result += "	<span style=\"margin-left:3em\">Enter how many semesters you plan to take: <input type=\"number\" id=\"fsemester\" name=\"fsemester\" value=\"1\"></span>";
 result += "    <button onclick=\"futurePlan()\" type=\"button\" id=\"futurePlan\">Plan</button>";
-result += "    <button onclick=\"resetSapSemesters()\" type=\"button\" id=\"reset\" disabled=\"\">Reset</button>";
+result += "    <button onclick=\"resetSapSemesters()\" type=\"button\" id=\"reset\"disabled=\"\">Reset</button>";
 result += "  </div>";
 result += "  <div id=\"semesters\"></div>";
 result += "  <div id=\"finalizedPlan\"></div>";
-result += "  <h4>Step Five:</h4>";
-result += "  <h4>Step Six:</h4>";
-result += "  <h4>Step Seven:</h4>";
-result += "  ";
+result += "  <br />";
+result += "  <div id=\"headlineLightGrey\"><h4>Step Five (Certification and Signature):</h4></div>";
+result += "  <p>I am requesting to have my eligibility for financial aid to be reinstated. I understand that my appeal will not be reviewed if it is incomplete or lacks documentation. By signing this form, I certify that the information provided on this form is both truthful and accurate.<br /><br />";
+result += "   <center>";
+result += "   Student's Signatures: ___________________________________&nbsp;&nbsp;&nbsp;&nbsp;Date:_________________";
+result += "   </center><br />";
+result += "  </p>";
+result += "  <div id=\"headlineLightGrey\"><h4>Step Six (Academic Adviser Certification):</h4></div>";
+result += "  <p>I approve this financial aid academic plan, which, if followed, will assist the student in reaching program completion or an academic standing acceptable for Satisfactory Academic Progress.<br /><br /> Comments:<br />";
+result += "    ";
+result += "    <center><textarea name=\"personalStatement2\" id=\"styled\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"personalStatement\" disabled=\"disabled\"></textarea></center>";
+result += "    <br /><br /><center>";
+result += "      Advisor's Name: _________________&nbsp;&nbsp;&nbsp;Advisor's Signatures: _________________&nbsp;&nbsp;&nbsp;Date:______________";
+result += "   </center><br /></p>";
+result += "  <div id=\"headlineLightGrey\"><h4>Committee Decision:</h4></div>";
+
+result += "    <p>";
+result += "    <center>Appeal Approved<img src=\"checkbox.jpg\" width=\"27\" height=\"23\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal Denied";
+result += "    <img src=\"checkbox.jpg\" width=\"27\" height=\"21\" /><br /></center></p><p>";
+result += "  Comments:<br />";
+result += "    ";
+result += "    <center><textarea name=\"personalStatement2\" id=\"styled\"maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"personalStatement\" disabled=\"disabled\"></textarea></center>";
+result += "    <br /><br /><center>";
+result += "      Chairperson's Signature: _________________&nbsp;&nbsp;&nbsp;Print Name: _________________&nbsp;&nbsp;&nbsp;Date:______________";
+result += "    </center><br /><center>";
+result += "      Student Notified on: _________________&nbsp;&nbsp;&nbsp;via&nbsp;&nbsp;&nbsp; email: _____&nbsp;&nbsp;&nbsp;phone: _____&nbsp;&nbsp;&nbsp;mail: _____";
+result += "    </center>";
+result += "  </p>";
+result += "  <div id=\"headlineLightGrey\"><h4>Academic Plan Complience Review:</h4></div>";
+result += "  <p>";
+result += "    <img src=\"checkbox.jpg\" width=\"27\" height=\"23\" /> Student met the conditions of the financial aid academic plan<br />";
+result += "    <img src=\"checkbox.jpg\" width=\"27\" height=\"21\" /> Student didn't the conditions of the financial aid academic plan<br /><br />";
+result += "  Comments:<br />";
+result += "    ";
+result += "   <center> <textarea name=\"personalStatement2\" id=\"styled\" maxlength=\"1100\" cols=\"120\" rows=\"11\" id=\"personalStatement\" disabled=\"disabled\"></textarea></center>";
+result += "    <center><br />";
+result += "     Reviewer's Signature: _________________&nbsp;&nbsp;&nbsp;Print Name: _________________&nbsp;&nbsp;&nbsp;Date:______________";
+result += "    </center>";
+result += "  </p>";
 result += "  <!-- end .content -->";
 result += "</div>";
 result += "  <!-- end .container --></div>";
 result += "</body>";
 result += "</html>";
 
-	
-	
-	document.open();
-    document.write(result);
-    document.close();
+
+document.open();
+document.write(result);
+document.close();
 }
 
 
@@ -498,7 +644,7 @@ function futurePlan(){
 
 function addSemester(ID){
 	//Adds information about the semester 'ID' to the id semester
-	var result = "<br><br><span style=\"margin-left:5em\">Enter how many classes you plan to take in Semester "+(+ID+1)+": <input type=\"number\" id=\"semesterClasses"+ID+"\" name=\"semesterClasses"+ID+"\" value=\"1\"></span>";
+	var result = "<br><span style=\"margin-left:5em\">Enter how many classes you plan to take in Semester "+(+ID+1)+": <input type=\"number\" id=\"semesterClasses"+ID+"\" name=\"semesterClasses"+ID+"\" value=\"1\"></span>";
 		result += "<button onclick=\"addSemesterClasses("+ID+")\" type=\"button\" id=\"addSemesterClasses"+ID+"\">Plan</button>"; 
 		result += "<button onclick=\"resetSemester("+ID+")\" type=\"button\" id=\"resetSemester"+ID+"\" disabled=\"true\">Reset</button><br>"; 
 		result += "<div id=\"semesterTable"+ID+"\"></div><br>"
@@ -581,14 +727,22 @@ function calculateSemester(ID){
 	
 	//make the result
 	result = "<br><span style=\"margin-left:3em\"><strong>Pace:</strong> Your new pace will be <strong>"+(Math.round((((+ecredits+newCredits)/(+acredits+newCredits)) * 100) * 100) / 100)+"%</strong></span><br>";
+	result += "<span style=\"margin-left:5em\">This "+(paceStatus(acredits+newCredits, newCredits)?"<strong>Will</strong>":"<strong>WILL NOT</strong>")+" meet the requirement for your pace</span><br>";
+	
 	result += "<span style=\"margin-left:3em\"><strong>GPA:</strong> Your new GPA will be <strong>"+newGPA+"</strong></span><br>";
+	result += "<span style=\"margin-left:5em\">This "+(gpaStatus(newGPA, acredits+newCredits)?"<strong>Will</strong>":"<strong>WILL NOT</strong>")+" meet the requirement for your Gpa</span><br>";
+
 	result += "<span style=\"margin-left:3em\"><strong>Max time frame:</strong> Your new attempted credits towards your max time frame will be <strong>"+(+acredits+newCredits)+"</strong> credits</span><br>";
-		
+	result += "<span style=\"margin-left:5em\">This "+(maxTimeFrameStatus(acredits+newCredits)?"<strong>Will</strong>":"<strong>WILL NOT</strong>")+" meet the requirement for your Max Time Frame</span><br>";
+
 	//if the calculation result for the current semester are last in line, we put finalize button;
 	//otherwise, we add next semester data.
 	if(+ID+1 == +plannedSemesters){
 		result += "<br><button onclick=\"finalizePlan()\" type=\"button\" id=\"finalize\">Finalize this Plan</button><br>"; 
+		result += "<div id=\"expectedGradDateDiv\"></>";
+		result += "<div id=\"printPlanDiv\"></>";
 	}else{
+		result += "<hr>";
 		addSemester(+ID+1);
 	}
 	document.getElementById("semesterResults"+ID).innerHTML = result;
@@ -608,8 +762,16 @@ function resetSemester(ID){
 	}
 }
 
-function finalizePlan(){
+function finalizePlan(acredits, ecredits, gpa){
+	if(!paceStatus(acredits, acredits) || !gpaStatus(gpa, acredits) || !maxTimeFrameStatus(acredits)){
+		document.getElementById("expectedGradDateDiv").innerHTML = "<hr><br><center>Your academic plan doesn't bring you back to SAP standards. Enter your expected graduation date: <input name=\"ExpectedGradutation\" type=\"text\" size=\"26\" maxlength=\"30\" /></center>";
+	}
+	finalized();
+}
+
+function finalized(){
 	//We funalize plan and make it ready to print
+	resizeIt();
 	document.getElementById("reset").remove();
 	document.getElementById("futurePlan").remove();
 	document.getElementById("finalize").remove();
@@ -621,68 +783,31 @@ function finalizePlan(){
 	}
 }
 
-function printPlan(){
+function resizeIt(){
+	var str = document.getElementById("personalStatement").value;
+	var res = str.split("\n");
+    var linecount = res.length;
+	var tmp;
 	var i;
-	var j;
-	var creditsForEachSemester = [];
-	var creditSelectedForEachSemester = [];
-	var gradeSelectedForEachSemester = [];
-
-	document.getElementById("print").remove();
-	
-	//Make a copy of the document that needs to be printed out
-	var resultPage = "<html><style>table, th, td {border: 1px solid black; text-align: left;}</style><body>";
-	resultPage += "<p>"+document.getElementById("sapCalc").innerHTML+"</p>";
-	resultPage += "<p>"+document.getElementById("result").innerHTML+"</p>";
-	resultPage += "<p>"+document.getElementById("semesters").innerHTML+"</p>";
-	resultPage += "<p>"+document.getElementById("finalizedPlan").innerHTML+"</p>";
-	resultPage +="</body></html>";
-	
-	//Copy each of the user input on the current page
-	for(i=0; i<plannedSemesters; i++){
-		creditsForEachSemester.push(document.getElementById(("semesterClasses"+i)).value)
+	for(i=0; i<res.length; i++){
+		tmp = res[i].length/120;
+		linecount += tmp;
 	}
-	for(i=0; i<creditsForEachSemester.length; i++){
-		var creditsSelected = [];
-		var gradesSelected = [];
-		for(j=0; j<+creditsForEachSemester[i]; j++){
-			creditsSelected.push(document.getElementById(("semester"+i+"classes"+j)).value);
-			gradesSelected.push(document.getElementById(("semester"+i+"classSelect"+j)).value);
-		}
-		creditSelectedForEachSemester.push(creditsSelected);
-		gradeSelectedForEachSemester.push(gradesSelected);
-	}
+	document.getElementById("personalStatement").rows = linecount + 1;
+	document.getElementById("personalStatement").disabled = true;
 	
-	//Make a new document
-	document.open();
-    document.write(resultPage);
-    document.close();
-	
-	//Paste over the user Entered values into the new document
-	document.getElementById("acredits").value = attemptedCredits;
-	document.getElementById("ecredits").value = earnedCredits;
-	document.getElementById("gcredits").value = gpaCredits;
-	document.getElementById("gpa").value = earnedGPA;
-	document.getElementById("fsemester").value = plannedSemesters;
-	if(undergraduate){
-		document.getElementById("ugrd").checked = true;
-	}else{
-		document.getElementById("ugrd").checked = false;
-		document.getElementById("grd").checked = true;
+	str = document.getElementById("progressBox").value;
+	res = str.split("\n");
+    linecount = res.length;
+	for(i=0; i<res.length; i++){
+		tmp = res[i].length/120;
+		linecount += tmp;
 	}
-	for(i=0; i<plannedSemesters; i++){
-		document.getElementById("semesterClasses"+i).value = creditsForEachSemester[i];
-		var creditsSelected = creditSelectedForEachSemester[i];
-		var gradesSelected = gradeSelectedForEachSemester[i];
-		for(j=0; j<+creditsForEachSemester[i]; j++){
-			document.getElementById(("semester"+i+"classes"+j)).value = creditsSelected[j];
-			document.getElementById(("semester"+i+"classSelect"+j)).value = gradesSelected[j];
-		}
-	}
+	document.getElementById("progressBox").rows = linecount + 1;
+	document.getElementById("progressBox").disabled = true;
 	
-	//Open up the print promt	
-	window.print();
 }
+
 
 var gradeArray = new Array(
 	new Grade("A/A+", 4.0),
