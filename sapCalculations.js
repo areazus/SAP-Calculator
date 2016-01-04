@@ -1,4 +1,9 @@
-
+/*
+ * Author: Ahmed Reaz
+ * Email: BC@AREAZ.US
+ *
+ */
+ 
 var attemptedCredits;
 var earnedCredits;
 var gpaCredits;
